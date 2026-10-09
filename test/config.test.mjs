@@ -35,6 +35,7 @@ test('config fallback, init, override, relative sources and port override are is
   const alternate = join(dir, 'alternate.mjs'); writeFileSync(alternate, `export default ${JSON.stringify(custom)}`);
   const settings = await loadConfig({ dataDir: dir, env: { AVALANCHE_ESTATE_CONFIG: alternate, AVALANCHE_ESTATE_DESK_PORT: '4180' } });
   assert.equal(settings.sources.estate.path, join(dir, 'sources', 'estate.json'));
+  assert.equal(settings.sources.estate.root, join(dir, 'sources'));
   assert.equal(settings.sources.portCheck.command.cwd, join(dir, 'tools'));
   assert.equal(settings.configPath, alternate); assert.equal(settings.desk.port, 4180);
   assert.ok(existsSync(dir));
@@ -53,13 +54,25 @@ const invalid = [
   ['source', c => c.sources = null, /sources/],
   ['manifest path', c => c.sources.manifest.path = 42, /sources.manifest.path/],
   ['estate path', c => c.sources.estate.path = [], /sources.estate.path/],
+  ['manifest root', c => c.sources.manifest.root = 42, /sources.manifest.root/],
+  ['estate root', c => c.sources.estate.root = '', /sources.estate.root/],
   ['products path', c => c.sources.products.path = {}, /sources.products.path/],
   ['command argv', c => c.sources.portCheck.command = { argv: [] }, /portCheck.command/],
   ['command cwd', c => c.sources.portCheck.command = { argv: ['node'], cwd: 4 }, /portCheck.command/],
+  ['command timeout', c => c.sources.portCheck.command = { argv: ['node'], timeoutMs: 0 }, /portCheck.command.timeoutMs/],
   ['scheduler', c => c.sources.scheduler.provider = 'unknown', /scheduler.provider/],
 ];
 for (const [label, mutate, error] of invalid) test(`config rejects invalid ${label} clearly`, () => {
   const config = structuredClone(example); mutate(config); assert.throws(() => validateConfig(config), error);
+});
+test('explicit registry roots resolve relative to each registry file, independently of dataDir', t => {
+  const { dir } = fixture(t);
+  const config = structuredClone(example);
+  config.sources.manifest = { path: 'registries/main.json', root: '../services' };
+  config.sources.estate = { path: 'extra/estate.json', root: join(dir, 'absolute-root') };
+  const settings = settingsFor(config, dir, { env: {} });
+  assert.equal(settings.sources.manifest.root, join(dir, 'services'));
+  assert.equal(settings.sources.estate.root, join(dir, 'absolute-root'));
 });
 test('database paths cannot escape the data directory', t => {
   const { dir } = fixture(t);

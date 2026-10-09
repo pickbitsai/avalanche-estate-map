@@ -2,7 +2,7 @@
 // Copyright 2026 Mark Pickering and PICKBITS LLC. Part of Avalanche Estate Map by PickBits.
 export default {
   name: 'Avalanche Estate Map', // Product title used by the CLI.
-  estateRoot: '.', // Base for registry dir metadata, relative to the data directory.
+  estateRoot: '.', // Fallback root for in-memory declarations without a configured registry path.
   db: 'estate.db', // SQLite file relative to and contained within the data directory.
   staleDays: 30, // Days without a declaration or observation before a CI becomes stale.
   actors: { default: null }, // Default actor; null uses the current operating-system username.
@@ -26,10 +26,10 @@ export default {
   },
   relationshipTypes: ['runs', 'scheduled_by', 'belongs_to', 'depends_on', 'feeds'], // Allowed relationship names.
   sources: { // Sources are read-only and paths resolve relative to the data directory.
-    manifest: { path: null }, // Optional estate registry JSON, e.g. sources/manifest.json.
-    estate: { path: null }, // Optional additional registry with the same schema, e.g. sources/estate.json.
+    manifest: { path: null, root: null }, // Optional registry path; root defaults to its directory, or resolves relative to it.
+    estate: { path: null, root: null }, // Optional additional registry with the same schema and independent root.
     products: { path: null }, // Optional JSON with products[] or games[]; products[] takes precedence; item mapping is identical.
-    portCheck: { command: null }, // Optional { argv: ['node', 'check-ports.mjs'], cwd: '.' }; emits JSON listening[].
+    portCheck: { command: null }, // Optional { argv: ['node', 'check-ports.mjs'], cwd: '.', timeoutMs: 120000 }; accepts JSON amid human lines.
     scheduler: { provider: 'none' }, // Either none or windows-task-scheduler (read-only schtasks CSV).
   },
   desk: { // Local desk settings; no automatic port selection.

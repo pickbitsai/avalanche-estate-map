@@ -1,0 +1,29 @@
+{
+  "engines": [
+    {
+      "id": "juniper-content",
+      "name": "Juniper Content",
+      "dir": "services/content",
+      "servers": [{ "port": 4300, "what": "Content desk" }],
+      "tasks": "Juniper-Cleanup",
+      "nodes": [
+        { "name": "daily", "tasks": ["Juniper-Daily", { "task_name": "\\Studio\\Night" }] },
+        { "name": "index", "jobs": { "taskName": "Juniper-Index" } },
+        { "name": "archive", "schedules": [{ "task": "Juniper-Archive" }, { "name": "Juniper-Summary" }, { "id": "Juniper-Audit" }] },
+        { "name": "manual-review", "desc": "Run by the studio when needed" },
+        { "name": "invalid-tasks", "tasks": [{ "id": "Broken job", "task": 42 }, 7] }
+      ]
+    },
+    { "id": "juniper-search", "dir": "services/search", "nodes": [] },
+    { "id": "broken-engine", "dir": 42 }
+  ],
+  "satellites": [
+    {
+      "id": "studio-guide",
+      "dir": "sites/guide",
+      "nodes": [{ "name": "refresh", "tasks": [{ "name": "Juniper-Guide" }] }],
+      "servers": [{ "port": 4320, "what": "Guide desk" }, { "name": "broken-listener", "port": "invalid" }]
+    },
+    { "id": "studio-status", "url": "http://127.0.0.1:4321" }
+  ]
+}

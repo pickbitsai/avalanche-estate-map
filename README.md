@@ -68,14 +68,14 @@ JSON list/classes exports wrap their arrays as `{ stamp, rows }`; show/tree add 
 
 Data-directory precedence is `--data-dir`, then `AVALANCHE_ESTATE_DATA_DIR`, then the platform default. On Windows the default is `new/avalanche-data/estate-map` under the home drive's root; on other platforms it is `~/.local/share/avalanche/estate-map`, using `os.homedir()`. The resolved path is printed by `--help` and at desk startup. It is created on first use.
 
-The real config is `<dataDir>/config.mjs`, overridden by `AVALANCHE_ESTATE_CONFIG`. Missing config falls back to [config.example.mjs](config.example.mjs) with a one-line notice and disabled sources. Relative source paths, command cwd and estateRoot resolve against the data directory, including when the config itself is at an override path. Config is trusted executable JavaScript; validation reports invalid keys clearly.
+The real config is `<dataDir>/config.mjs`, overridden by `AVALANCHE_ESTATE_CONFIG`. Missing config falls back to [config.example.mjs](config.example.mjs) with a one-line notice and disabled sources. Relative source paths, command cwd and estateRoot resolve against the data directory, including when the config itself is at an override path. Registry roots instead resolve against their registry file's directory. Config is trusted executable JavaScript; validation reports invalid keys clearly.
 
 Repository directories are rejected as data directories. `.test-tmp/` is the explicit test/demo exception and is ignored by Git. Databases, reports, config, source copies, logs and caches never belong in tracked files. The application creates no log or cache files. The root `index.html` is externally generated, ignored and never used by the desk.
 
 | Config key | Meaning / default |
 | --- | --- |
 | `name` | CLI title, `Avalanche Estate Map`. |
-| `estateRoot` | Metadata base for registry `dir` paths, `.` relative to dataDir; never scanned recursively. |
+| `estateRoot` | Fallback metadata base for in-memory declarations without a configured registry path, `.` relative to dataDir. File sources use their own `root`. |
 | `db` | Relative database filename, `estate.db`; absolute paths and escapes from dataDir are rejected. |
 | `staleDays` | Non-negative age threshold, 30 days; stale strictly after the boundary. |
 | `actors.default` | Default actor string or `null` for OS identity. |
@@ -83,7 +83,9 @@ Repository directories are rejected as data directories. `.test-tmp/` is the exp
 | `identificationRules` | Class name → ordered identifying attributes: engine/satellite `manifest_id`, endpoint `port`, task `task_name`, data_store/repo `path`, product `slug`. Changing rules creates new identities. |
 | `relationshipTypes` | Allowed types: `runs`, `scheduled_by`, `belongs_to`, `depends_on`, `feeds`. The first two are required for projection. |
 | `sources.manifest.path` | Optional estate registry JSON; `null` disables it. |
+| `sources.manifest.root` | Base for engine/satellite `dir` metadata. Default `null` means the registry's directory. Relative values resolve against that directory; absolute roots are accepted. |
 | `sources.estate.path` | Optional second registry with the same schema; `null` disables it. Manifest takes precedence on duplicate identities. |
+| `sources.estate.root` | Independent root for the additional registry, with the same rules as manifest.root. |
 | `sources.products.path` | Optional registry JSON with `products[]` or `games[]`; `null` disables it. |
 | `sources.portCheck.command` | `null` disables live listener collection, or `{ argv, cwd }` as described below. |
 | `sources.scheduler.provider` | `none` (default) or `windows-task-scheduler`. |
@@ -93,13 +95,13 @@ Repository directories are rejected as data directories. `.test-tmp/` is the exp
 
 ### Estate registry schema
 
-Both `sources.manifest` and `sources.estate` accept `{ path }` and use [examples/estate.example.json](examples/estate.example.json). The example declares eight Juniper Trail Studio engines with ports in 4300–4399. The file is a JSON object with `engines`, `satellites` and optional `repos` arrays; empty arrays explicitly declare an empty registry. `company` is optional descriptive metadata.
+Both `sources.manifest` and `sources.estate` accept `{ path, root }` and use [examples/estate.example.json](examples/estate.example.json). Each registry's engine and satellite `dir` resolves against its root, defaulting to the registry's own directory. Absolute `dir` paths remain absolute. Roots are metadata bases, never recursively scanned. The example declares eight Juniper Trail Studio engines with ports in 4300–4399. The file is a JSON object with `engines`, `satellites` and optional `repos` arrays; empty arrays explicitly declare an empty registry. `company` is optional descriptive metadata.
 
-An engine has `id` (required stable string), `owner` (technical actor), `dir`, `name`, `note`, `url`, and `servers[]` of `{ port, what, start }`. Optional `businessOwner` sets initial business ownership. `nodes[]` has `{ name, desc, tasks: ["full task name"] }` for scheduled jobs. Task names preserve scheduler folders; a single leading backslash is normalized away. `class`, `role` and `hasOwnDashboard` are optional metadata. Owner defaults initialize new CIs; later manual ownership survives changes to the source.
+An engine has `id` (required stable string), `owner` (technical actor), `dir`, `name`, optional `note` and `url`, and `servers[]` of `{ port, what, start }`. Optional `businessOwner` sets initial business ownership. `nodes[]` can describe manual work without any scheduled tasks. Engines, satellites and their nodes may declare `tasks`, `jobs` or `schedules`, each as one entry or an array. An entry is a non-empty task-name string or an object with a name in `task_name`, `taskName`, `task`, `name` or `id` (first present key wins). These are task identities, not cron expressions; extra scheduling metadata is not interpreted or executed. Task names preserve scheduler folders; a single leading backslash is normalized away. `class`, `role` and `hasOwnDashboard` are optional metadata. Owner defaults initialize new CIs; later manual ownership survives changes to the source. See the mixed-shape [test fixture](test/fixtures/mixed-tasks.json).
 
-A satellite has `id`, `owner`, optional `businessOwner`, `dir`, `name`, `note`, `port` and/or `url`, plus optional `servers[]`. Only an explicit port or a loopback URL with a port produces an endpoint. A satellite without id but with `path` is a data store. Optional `repos[]` entries have `path`, `name` and `owner`. Paths and start commands are descriptive; no source contents are written back and no start command is executed.
+A satellite has `id`, `owner`, optional `businessOwner`, `dir`, `name`, `note`, optional `port` and/or `url`, plus optional `servers[]`. A satellite needs no top-level port. Only an explicit port, a server entry or a loopback URL with a port produces an endpoint. A satellite without id but with `path` is a data store. Optional `repos[]` entries have `path`, `name` and `owner`. Paths and start commands are descriptive; no source contents are written back and no start command is executed.
 
-Engines and satellites have `runs` edges to endpoints. Tasks have `scheduled_by` edges to engines. Product-to-engine and other business relationships are manual. Duplicate identities use the first declaration; malformed products are skipped with messages. Use one manifest as the authoritative registry when possible.
+Engines and satellites have `runs` edges to endpoints. Tasks have `scheduled_by` edges to their declaring engine or satellite. Product-to-engine and other business relationships are manual. Duplicate identities use the first declaration. Malformed entries are skipped individually with warnings naming the owning engine/satellite, node and entry (or its index); healthy siblings still project. Missing optional fields produce no warning. Declared relationship removal is deferred on scans with skipped entries. Use one manifest as the authoritative registry when possible.
 
 ### Products schema
 
@@ -109,7 +111,7 @@ Each item requires non-empty `slug` and `name` strings. The slug identifies the 
 
 ### Live sources and reconciliation
 
-`sources.portCheck.command` is optional: `{ argv: ["node", "check-ports.mjs"], cwd: "." }`. The command runs without a shell, from the configured cwd, with a 30-second timeout and bounded output. It must emit one JSON object on stdout: `{ "listening": [4300, 4301] }`. Integers must be valid TCP ports. A complete listening array is accepted even with a nonzero allocation-check exit code, which is reported; process termination, invalid JSON and invalid ports leave the observation incomplete. No bundled collector scans your machine.
+`sources.portCheck.command` is optional: `{ argv: ["node", "check-ports.mjs"], cwd: ".", timeoutMs: 120000 }`. The command runs without a shell, from the configured cwd, with bounded output. Optional `timeoutMs` defaults to 120000 (two minutes) and accepts integers from 1 to 300000. Human lines may surround the JSON, including a trailing summary. The reader takes the last complete JSON value from stdout, also accepting independently parseable JSON lines. Supported payloads are `{ "listening": [4300, 4301] }`, a bare integer port array, or an array of snapshot objects whose last object has `listening[]`. Integers must be valid TCP ports; arrays are deduplicated and sorted. A complete listening array is accepted even with a nonzero allocation-check exit code, which is reported. Process termination, missing/invalid JSON or invalid ports produce `port check unavailable: <reason>` and no new listener observations. No bundled collector scans your machine.
 
 `windows-task-scheduler` reads `schtasks.exe /Query /FO CSV /NH` directly. The CSV reader handles quotes, embedded commas and line breaks, root tasks and folder names. It records task name, next-run text and status text. It does not parse localized dates or infer job success. On non-Windows systems, command failures and malformed CSV are reported as unavailable. `none` performs no scheduler access.
 

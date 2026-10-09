@@ -77,10 +77,13 @@ test('undeclared scheduled jobs become observed-only CIs', async t => {
   assert.ok(result.report.observed_only.some(ci => ci.ci_key === 'scheduled_task:Juniper-Extra'));
 });
 
-test('malformed registry collections are unavailable rather than crashing or removing evidence', async t => {
+test('malformed registry roots are unavailable but malformed children produce named warnings', async t => {
   const { settings } = fixture(t);
-  for (const manifest of [{ engines: {} }, { engines: [{ id: 'alpha', servers: {} }] }, { engines: [{ id: 'alpha', nodes: [null] }] }]) {
+  const invalidRoot = await syncCMDB({ settings, manifest: { engines: {} }, observations: observations() });
+  assert.match(invalidRoot.sources.manifest, /unavailable/); assert.equal(invalidRoot.counts.total, 0);
+  for (const manifest of [{ engines: [{ id: 'alpha', servers: {} }] }, { engines: [{ id: 'alpha', nodes: [null] }] }]) {
     const result = await syncCMDB({ settings, manifest, observations: observations() });
-    assert.match(result.sources.manifest, /unavailable/); assert.equal(result.counts.total, 0);
+    assert.doesNotMatch(result.sources.manifest, /unavailable/); assert.equal(result.counts.total, 1);
+    assert.ok(result.skipped.some(warning => /warning: skipped engines "alpha"/.test(warning)));
   }
 });
