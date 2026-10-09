@@ -84,7 +84,7 @@ Repository directories are rejected as data directories. `.test-tmp/` is the exp
 | `relationshipTypes` | Allowed types: `runs`, `scheduled_by`, `belongs_to`, `depends_on`, `feeds`. The first two are required for projection. |
 | `sources.manifest.path` | Optional estate registry JSON; `null` disables it. |
 | `sources.estate.path` | Optional second registry with the same schema; `null` disables it. Manifest takes precedence on duplicate identities. |
-| `sources.products.path` | Optional products registry JSON; `null` disables it. |
+| `sources.products.path` | Optional registry JSON with `products[]` or `games[]`; `null` disables it. |
 | `sources.portCheck.command` | `null` disables live listener collection, or `{ argv, cwd }` as described below. |
 | `sources.scheduler.provider` | `none` (default) or `windows-task-scheduler`. |
 | `desk.host` | Must be `127.0.0.1`. |
@@ -103,7 +103,9 @@ Engines and satellites have `runs` edges to endpoints. Tasks have `scheduled_by`
 
 ### Products schema
 
-[examples/products.example.json](examples/products.example.json) is `{ "products": [...] }`. Each product requires non-empty `slug` and `name` strings. Optional fields retained in CI attributes are `genre`, `playUrl`, `platforms` (string array), `tags` (string array), `featured`, `connected`, `telemetry` (descriptive string array only), and `openSource`. Missing booleans default to false and arrays to empty. These fields never initiate runtime telemetry or connections. Unknown fields are ignored; duplicate slugs are skipped. A product is declaration-backed (`observedBy: none`), so presence in the registry means reconciled, not that its URL was health-checked.
+[examples/products.example.json](examples/products.example.json) uses `{ "products": [...] }`; `{ "games": [...] }` is also accepted with identical item mapping. The first valid array is used in this order: `products`, then `games`. A `products[]` array takes precedence even when empty; the two arrays are never merged.
+
+Each item requires non-empty `slug` and `name` strings. The slug identifies the product CI. Optional fields retained in CI attributes are `genre`, `playUrl`, `platforms` (string array), `tags` (string array), `featured`, `connected`, `telemetry` (descriptive string array only), and `openSource`. Missing booleans default to false and arrays to empty. These fields never initiate runtime telemetry or connections. Other fields, including catalog `id`, `distribution`, `cover` and ownership fields, are ignored; technical and business ownership are managed on the CI and survive subsequent syncs. Duplicate slugs are skipped. A product is declaration-backed (`observedBy: none`), so presence in either registry format means reconciled, not that its URL was health-checked.
 
 ### Live sources and reconciliation
 

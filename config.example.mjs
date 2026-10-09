@@ -28,7 +28,7 @@ export default {
   sources: { // Sources are read-only and paths resolve relative to the data directory.
     manifest: { path: null }, // Optional estate registry JSON, e.g. sources/manifest.json.
     estate: { path: null }, // Optional additional registry with the same schema, e.g. sources/estate.json.
-    products: { path: null }, // Optional products JSON, e.g. sources/products.json.
+    products: { path: null }, // Optional JSON with products[] or games[]; products[] takes precedence; item mapping is identical.
     portCheck: { command: null }, // Optional { argv: ['node', 'check-ports.mjs'], cwd: '.' }; emits JSON listening[].
     scheduler: { provider: 'none' }, // Either none or windows-task-scheduler (read-only schtasks CSV).
   },
