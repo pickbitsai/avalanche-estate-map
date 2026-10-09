@@ -1,0 +1,228 @@
+{
+  "company": "Juniper Trail Studio",
+  "engines": [
+    {
+      "id": "canyon-notes",
+      "owner": "human:priya",
+      "businessOwner": "human:priya",
+      "dir": "services/canyon-notes",
+      "name": "Canyon Notes",
+      "note": "Field notes and editorial planning",
+      "url": "http://127.0.0.1:4300",
+      "servers": [
+        {
+          "port": 4300,
+          "what": "Canyon Notes desk",
+          "start": "node desk.mjs"
+        }
+      ],
+      "nodes": [
+        {
+          "name": "daily",
+          "desc": "Refresh Canyon Notes records",
+          "tasks": [
+            "Juniper-canyon-notes-Daily"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mesa-planner",
+      "owner": "human:owen",
+      "businessOwner": "human:priya",
+      "dir": "services/mesa-planner",
+      "name": "Mesa Planner",
+      "note": "Small-team project planning",
+      "url": "http://127.0.0.1:4301",
+      "servers": [
+        {
+          "port": 4301,
+          "what": "Mesa Planner desk",
+          "start": "node desk.mjs"
+        }
+      ],
+      "nodes": [
+        {
+          "name": "daily",
+          "desc": "Refresh Mesa Planner records",
+          "tasks": [
+            "Juniper-mesa-planner-Daily"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "arroyo-board",
+      "owner": "human:priya",
+      "businessOwner": "human:priya",
+      "dir": "services/arroyo-board",
+      "name": "Arroyo Board",
+      "note": "Shared research board",
+      "url": "http://127.0.0.1:4302",
+      "servers": [
+        {
+          "port": 4302,
+          "what": "Arroyo Board desk",
+          "start": "node desk.mjs"
+        }
+      ],
+      "nodes": [
+        {
+          "name": "daily",
+          "desc": "Refresh Arroyo Board records",
+          "tasks": [
+            "Juniper-arroyo-board-Daily"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pine-post",
+      "owner": "human:owen",
+      "businessOwner": "human:priya",
+      "dir": "services/pine-post",
+      "name": "Pine Post",
+      "note": "Newsletter composition",
+      "url": "http://127.0.0.1:4303",
+      "servers": [
+        {
+          "port": 4303,
+          "what": "Pine Post desk",
+          "start": "node desk.mjs"
+        }
+      ],
+      "nodes": [
+        {
+          "name": "daily",
+          "desc": "Refresh Pine Post records",
+          "tasks": [
+            "Juniper-pine-post-Daily"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trail-media",
+      "owner": "human:priya",
+      "businessOwner": "human:priya",
+      "dir": "services/trail-media",
+      "name": "Trail Media",
+      "note": "Media conversion queue",
+      "url": "http://127.0.0.1:4304",
+      "servers": [
+        {
+          "port": 4304,
+          "what": "Trail Media desk",
+          "start": "node desk.mjs"
+        }
+      ],
+      "nodes": [
+        {
+          "name": "daily",
+          "desc": "Refresh Trail Media records",
+          "tasks": [
+            "Juniper-trail-media-Daily"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ridge-status",
+      "owner": "human:owen",
+      "businessOwner": "human:priya",
+      "dir": "services/ridge-status",
+      "name": "Ridge Status",
+      "note": "Service status overview",
+      "url": "http://127.0.0.1:4305",
+      "servers": [
+        {
+          "port": 4305,
+          "what": "Ridge Status desk",
+          "start": "node desk.mjs"
+        }
+      ],
+      "nodes": [
+        {
+          "name": "daily",
+          "desc": "Refresh Ridge Status records",
+          "tasks": [
+            "Juniper-ridge-status-Daily"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cedar-vault",
+      "owner": "human:priya",
+      "businessOwner": "human:priya",
+      "dir": "services/cedar-vault",
+      "name": "Cedar Vault",
+      "note": "Document archive",
+      "url": "http://127.0.0.1:4306",
+      "servers": [
+        {
+          "port": 4306,
+          "what": "Cedar Vault desk",
+          "start": "node desk.mjs"
+        }
+      ],
+      "nodes": [
+        {
+          "name": "daily",
+          "desc": "Refresh Cedar Vault records",
+          "tasks": [
+            "Juniper-cedar-vault-Daily"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sunset-index",
+      "owner": "human:owen",
+      "businessOwner": "human:priya",
+      "dir": "services/sunset-index",
+      "name": "Sunset Index",
+      "note": "Search indexing service",
+      "url": "http://127.0.0.1:4307",
+      "servers": [
+        {
+          "port": 4307,
+          "what": "Sunset Index desk",
+          "start": "node desk.mjs"
+        }
+      ],
+      "nodes": [
+        {
+          "name": "daily",
+          "desc": "Refresh Sunset Index records",
+          "tasks": [
+            "Juniper-sunset-index-Daily"
+          ]
+        }
+      ]
+    }
+  ],
+  "satellites": [
+    {
+      "id": "studio-guide",
+      "owner": "human:owen",
+      "dir": "sites/studio-guide",
+      "name": "Studio Guide",
+      "note": "Team runbooks",
+      "port": 4320,
+      "url": "http://127.0.0.1:4320"
+    },
+    {
+      "name": "Editorial records",
+      "path": "stores/editorial.db",
+      "note": "Publication metadata"
+    }
+  ],
+  "repos": [
+    {
+      "path": "repos/studio-tools",
+      "name": "Studio Tools",
+      "owner": "human:owen"
+    }
+  ]
+}

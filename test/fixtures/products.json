@@ -1,0 +1,43 @@
+{
+  "$comment": "Product registry fixture with a products array.",
+  "products": [
+    {
+      "slug": "canyon-notes",
+      "name": "Canyon Notes",
+      "genre": "productivity",
+      "playUrl": "https://notes.example.com",
+      "platforms": ["web", "desktop", "android"],
+      "tags": ["Notes", "Editorial", "Writing"],
+      "featured": true,
+      "connected": true,
+      "telemetry": [],
+      "openSource": false
+    },
+    {
+      "slug": "mesa-planner",
+      "name": "Mesa Planner",
+      "genre": "planning",
+      "playUrl": "https://planner.example.com",
+      "platforms": ["web"],
+      "tags": ["Planning", "Projects", "Studio"],
+      "connected": false,
+      "telemetry": [],
+      "openSource": false
+    },
+    {
+      "slug": "arroyo-board",
+      "name": "Arroyo Board",
+      "genre": "research",
+      "playUrl": "https://board.example.com",
+      "platforms": ["web"],
+      "tags": ["Research", "AI", "Notes"],
+      "featured": false,
+      "connected": false,
+      "telemetry": [],
+      "openSource": true
+    }
+  ],
+  "inDevelopment": [
+    { "slug": "not-yet-declared", "name": "Not Yet Declared" }
+  ]
+}

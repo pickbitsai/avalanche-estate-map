@@ -1,0 +1,140 @@
+{
+  "products": [
+    {
+      "slug": "canyon-notes",
+      "name": "Canyon Notes",
+      "genre": "productivity",
+      "playUrl": "https://example.com/canyon-notes",
+      "platforms": [
+        "web"
+      ],
+      "tags": [
+        "studio",
+        "content"
+      ],
+      "featured": true,
+      "connected": true,
+      "telemetry": [],
+      "openSource": false
+    },
+    {
+      "slug": "mesa-planner",
+      "name": "Mesa Planner",
+      "genre": "productivity",
+      "playUrl": "https://example.com/mesa-planner",
+      "platforms": [
+        "web"
+      ],
+      "tags": [
+        "studio",
+        "operations"
+      ],
+      "featured": true,
+      "connected": true,
+      "telemetry": [],
+      "openSource": false
+    },
+    {
+      "slug": "arroyo-board",
+      "name": "Arroyo Board",
+      "genre": "productivity",
+      "playUrl": "https://example.com/arroyo-board",
+      "platforms": [
+        "web"
+      ],
+      "tags": [
+        "studio",
+        "content"
+      ],
+      "featured": false,
+      "connected": true,
+      "telemetry": [],
+      "openSource": false
+    },
+    {
+      "slug": "pine-post",
+      "name": "Pine Post",
+      "genre": "productivity",
+      "playUrl": "https://example.com/pine-post",
+      "platforms": [
+        "web"
+      ],
+      "tags": [
+        "studio",
+        "operations"
+      ],
+      "featured": false,
+      "connected": true,
+      "telemetry": [],
+      "openSource": false
+    },
+    {
+      "slug": "trail-media",
+      "name": "Trail Media",
+      "genre": "service",
+      "playUrl": "https://example.com/trail-media",
+      "platforms": [
+        "web"
+      ],
+      "tags": [
+        "studio",
+        "content"
+      ],
+      "featured": false,
+      "connected": true,
+      "telemetry": [],
+      "openSource": false
+    },
+    {
+      "slug": "ridge-status",
+      "name": "Ridge Status",
+      "genre": "service",
+      "playUrl": "https://example.com/ridge-status",
+      "platforms": [
+        "web"
+      ],
+      "tags": [
+        "studio",
+        "operations"
+      ],
+      "featured": false,
+      "connected": true,
+      "telemetry": [],
+      "openSource": false
+    },
+    {
+      "slug": "cedar-vault",
+      "name": "Cedar Vault",
+      "genre": "service",
+      "playUrl": "https://example.com/cedar-vault",
+      "platforms": [
+        "web"
+      ],
+      "tags": [
+        "studio",
+        "content"
+      ],
+      "featured": false,
+      "connected": true,
+      "telemetry": [],
+      "openSource": false
+    },
+    {
+      "slug": "sunset-index",
+      "name": "Sunset Index",
+      "genre": "service",
+      "playUrl": "https://example.com/sunset-index",
+      "platforms": [
+        "web"
+      ],
+      "tags": [
+        "studio",
+        "operations"
+      ],
+      "featured": false,
+      "connected": true,
+      "telemetry": [],
+      "openSource": false
+    }
+  ]
+}

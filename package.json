@@ -1,0 +1,23 @@
+{
+  "name": "avalanche-estate-map",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Typed estate inventory, ownership and declared-versus-live reconciliation",
+  "type": "module",
+  "license": "Apache-2.0",
+  "author": "Mark Pickering and PICKBITS LLC",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "bin": {
+    "avalanche-estate": "bin/avalanche-estate.mjs"
+  },
+  "scripts": {
+    "test": "node --import ./test/no-network.mjs --test test/*.test.mjs",
+    "desk": "node bin/desk.mjs",
+    "demo": "node bin/avalanche-estate.mjs demo",
+    "leakscan": "node test/leakscan.mjs",
+    "preflight": "npm test && npm run leakscan && node test/consumer-install.mjs"
+  },
+  "dependencies": {}
+}

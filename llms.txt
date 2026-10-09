@@ -1,0 +1,20 @@
+Avalanche Estate Map by PickBits — 0.1.0
+Package avalanche-estate-map; bin avalanche-estate; Apache-2.0; private publication flag.
+Purpose: typed configuration inventory, technical/business ownership, relationships and drift.
+Node 22.13+, ESM, node:sqlite, zero dependencies, append-only actor-attributed events.
+Commands: init, sync [--apply], list, show, tree, classes, own, link, drift, desk, demo.
+Entry: bin/avalanche-estate.mjs; shared behavior in lib/; static desk assets in static/.
+Config: config.example.mjs; real config is <dataDir>/config.mjs; AVALANCHE_ESTATE_CONFIG override.
+Data: --data-dir > AVALANCHE_ESTATE_DATA_DIR > platform default. Never instance data in source tree.
+Windows default: system-drive new/avalanche-data/estate-map. Else: ~/.local/share/avalanche/estate-map.
+Optional sources: manifest and estate registries, products list, portCheck argv/cwd, scheduler provider.
+Scheduler: none or windows-task-scheduler; schtasks CSV, read-only, no external dependency.
+Reports: <dataDir>/reports/drift-<UTC-date>.json. Every report/export carries product stamp.
+Desk: 127.0.0.1:4180; exact Host, token AND same-origin Origin on POST, 1 MiB cap, strict CSP.
+No authentication; no remote exposure. No telemetry or external assets. Sync stays CLI-only.
+lib/panel.mjs exports id, title, nav, collect, stat, render; id stays cmdb for compatibility; missing DB returns null.
+Demo: npm run demo; .test-tmp/demo; Juniper Trail Studio; two months; eight products; five actors.
+Checks: npm test; npm run leakscan; npm run preflight. Clean consumer also runs directly with node.
+Limits: one host/port namespace; listeners prove port presence only; task presence is not job health.
+Read README.md, SECURITY.md and DEMO.md for schemas, setup and walkthrough.
+Questions and bugs: open a GitHub issue.

@@ -1,0 +1,36 @@
+{
+  "engines": [
+    {
+      "id": "alpha",
+      "dir": "alpha-engine",
+      "name": "Alpha Engine",
+      "class": "Test engine",
+      "servers": [
+        { "port": 4301, "what": "alpha desk", "start": "node desk.mjs" }
+      ],
+      "nodes": [
+        { "name": "daily", "desc": "Daily fixture work", "tasks": ["Juniper-Alpha-Daily"] }
+      ]
+    },
+    {
+      "id": "beta",
+      "dir": "beta-engine",
+      "name": "Beta Engine",
+      "servers": [],
+      "nodes": []
+    }
+  ],
+  "satellites": [
+    {
+      "id": "helper",
+      "dir": "helper-app",
+      "name": "Helper App",
+      "url": "http://127.0.0.1:4302"
+    },
+    {
+      "name": "Fixture registry",
+      "path": "registry/records.json",
+      "note": "A path-only manifest record is a data store."
+    }
+  ]
+}
